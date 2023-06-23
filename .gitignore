@@ -1,0 +1,26 @@
+*media
+static_f
+.idea/
+db.sqlite3
+db.sqlite3-journal
+pilka/local_settings.py
+
+# Python
+__pycache__/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# VSCode files
+*.code-workspace
+
+# Environments
+.venv 
+venv/ 
+venv.bak/ 
+poetry.lock
+
+# misc
+.env
