@@ -11,6 +11,8 @@ from api.users.serializers import UserSerializer
 
 
 class GoogleAuthAPIView(CreateAPIView):
+    serializer_class = UserSerializer
+    
     def create(self, request, *args, **kwargs):
         token = request.data.get('token')
 
@@ -20,7 +22,7 @@ class GoogleAuthAPIView(CreateAPIView):
 
             with transaction.atomic():
                 user, created = self.get_or_create_user(name, email, user_id)
-                serializer = UserSerializer(user)
+                serializer = self.get_serializer(user)
 
                 if not created:
                     return Response({"user": serializer.data},
