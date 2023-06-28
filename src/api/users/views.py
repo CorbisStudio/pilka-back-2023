@@ -2,17 +2,19 @@ from rest_framework.generics import (CreateAPIView, RetrieveAPIView,
                                      DestroyAPIView, ListAPIView)
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.db import transaction
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
 from api.users.models import Users
 from api.users.serializers import UserSerializer
+from datetime import datetime
 
 
 class GoogleAuthAPIView(CreateAPIView):
     serializer_class = UserSerializer
-    
+
     def create(self, request, *args, **kwargs):
         token = request.data.get('token')
 
@@ -28,11 +30,31 @@ class GoogleAuthAPIView(CreateAPIView):
                     return Response({"user": serializer.data},
                                     status=status.HTTP_409_CONFLICT)
 
-                return Response({"user": serializer.data},
+                # Generar el token de sesión
+                token = self.generate_token(user)
+
+                response_data = {
+                    "session": {
+                        "id": user.id,
+                        "expiration_date": token["expires_at"],
+                        "token": token["token"],
+                    },
+                    "user": serializer.data
+                }
+
+                return Response(response_data,
                                 status=status.HTTP_200_OK)
         except ValueError:
             return Response({"message": "Invalid token"},
                             status=status.HTTP_401_UNAUTHORIZED)
+
+    def generate_token(self, user):
+        refresh = RefreshToken.for_user(user)
+        token = {
+            "token": str(refresh.access_token),
+            "expires_at": datetime.now() + refresh.access_token.lifetime,
+        }
+        return token
 
     def verify_google_token(self, token):
         # Verificar el token de acceso con Google
@@ -47,7 +69,8 @@ class GoogleAuthAPIView(CreateAPIView):
 
     def get_or_create_user(self, name, email, user_id):
         # Verificar si el usuario ya existe en la base de datos o crearlo si no existe
-        return Users.objects.get_or_create(user_id=user_id, defaults={'name': name, 'email': email})
+        return Users.objects.get_or_create(user_id=user_id,
+                                           defaults={'name': name, 'email': email})
 
 
 class UserRetrieveAPIView(RetrieveAPIView):
