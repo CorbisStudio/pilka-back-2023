@@ -2,13 +2,10 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-import dotenv
 
 
 def main():
     """Run administrative tasks."""
-
-    dotenv.load_dotenv()
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pilka.settings')
     try:

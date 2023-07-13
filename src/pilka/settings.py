@@ -3,6 +3,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # import firebase_admin
+from datetime import timedelta
 import os
 
 load_dotenv()
@@ -13,30 +14,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG')
 
-# cred = credentials.Certificate('firebase-sdk.json')
-
-# firebase_admin.initialize_app(cred, {
-#     'databaseURL': 'https://pilka-86c8c-default-rtdb.firebaseio.com/'
-# })
-
-# ref = db.reference('/')
-
-# ref.set({
-#     'User':
-#         {
-#             'user1': {
-#                 'name': 'Juan',
-#                 'last_name': 'Perez',
-#             },
-#             'user2': {
-#                 'name': 'Pepe',
-#                 'last_name': 'Martinez',
-#             }
-#         }
-# })
-
-
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost']
+
+AUTH_USER_MODEL = 'users.Users'
 
 BASE_APPS = [
     'django.contrib.admin',
@@ -110,6 +90,11 @@ REST_FRAMEWORK = {
     )
 }
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=10),
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -126,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
+# Internapython-dotenvtionalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
