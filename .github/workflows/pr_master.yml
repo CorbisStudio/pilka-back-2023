@@ -1,0 +1,17 @@
+name: 'Gitflow in Master'
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - master
+
+jobs:
+  Gitflow-master-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: deepakputhraya/action-branch-name@master
+        with:
+          regex: '[a-z]*/.*'
+          ignore: master
+          allowed_prefixes: 'release,hotfix'

@@ -1,0 +1,15 @@
+name: 'Gitflow in Release'
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - 'releases/**'
+
+jobs:
+  Gitflow-release-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: deepakputhraya/action-branch-name@master
+        with:
+          regex: 'develop'

@@ -1,0 +1,21 @@
+name: 'Gitflow in Dev'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - develop
+
+jobs:
+  Gitflow-develop-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: deepakputhraya/action-branch-name@master
+        with:
+          regex: '[a-z]*/.*'
+          ignore: develop
+          allowed_prefixes: 'feature,backport,dependabot'

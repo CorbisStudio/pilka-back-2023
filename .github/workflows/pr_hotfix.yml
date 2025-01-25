@@ -1,0 +1,15 @@
+name: 'Gitflow in Hotfix'
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - 'hotfix/**'
+
+jobs:
+  Gitflow-hotfix-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: deepakputhraya/action-branch-name@master
+        with:
+          regex: 'master'
